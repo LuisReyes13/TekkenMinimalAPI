@@ -16,8 +16,7 @@ namespace TekkenMinimalAPI.EndPoints
         public static RouteGroupBuilder MapUsuarios(this RouteGroupBuilder group)
         {
             group.MapPost("/registrar", Registrar)
-                .AddEndpointFilter<FiltroValidaciones<CredencialesUsuarioDTO>>()
-                .RequireAuthorization("esadmin");
+                .AddEndpointFilter<FiltroValidaciones<CredencialesUsuarioDTO>>();
 
             group.MapPost("/login", Login)
                 .AddEndpointFilter<FiltroValidaciones<CredencialesUsuarioDTO>>();

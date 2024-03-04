@@ -21,26 +21,69 @@ namespace TekkenMinimalAPI.EndPoints
             group.MapGet("/", ObtenerTodos)
                 .CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60))
                 .Tag("personajes-get"))
-                .AgregarParametrosPaginacionAOpenAPI();
+                .AgregarParametrosPaginacionAOpenAPI()
+                .WithOpenApi(opciones =>
+                {
+                    opciones.Summary = "Obtener todos los personajes";
+                    opciones.Description = "Con este endpoint se obtienen todos los personajes";
 
-            group.MapGet("/{id:int}", ObtenerPorId);
+                    return opciones;
+                });
 
-            group.MapGet("obtenerPorNombre/{nombre}", ObtenerPorNombre);
+            group.MapGet("/{id:int}", ObtenerPorId)
+                .WithOpenApi(opciones =>
+                {
+                    opciones.Summary = "Obtener personaje por Id";
+                    opciones.Description = "Con este endpoint se obtiene un personaje por su Id";
+                    opciones.Parameters[0].Description = "El Id del personaje a obtener";
+
+                    return opciones;
+                }); 
+
+            group.MapGet("obtenerPorNombre/{nombre}", ObtenerPorNombre)
+                .WithOpenApi(opciones =>
+                {
+                    opciones.Summary = "Obtener personaje por Nombre";
+                    opciones.Description = "Con este endpoint se obtiene un personaje por su nombre";
+                    opciones.Parameters[0].Description = "El nombre del personaje a obtener";
+
+                    return opciones;
+                }); 
 
             group.MapPost("/", Crear)
                 .DisableAntiforgery()
                 .AddEndpointFilter<FiltroValidaciones<CrearPersonajeDTO>>()
                 .RequireAuthorization("esadmin")
-                .WithOpenApi();
+                .WithOpenApi(opciones =>
+                {
+                    opciones.Summary = "Crear personaje";
+                    opciones.Description = "Con este endpoint se crea un personaje";
+
+                    return opciones;
+                });
 
             group.MapPut("/{id:int}", Actualizar)
                 .DisableAntiforgery()
                 .AddEndpointFilter<FiltroValidaciones<CrearPersonajeDTO>>()
                 .RequireAuthorization("esadmin")
-                .WithOpenApi();
+                .WithOpenApi(opciones =>
+                {
+                    opciones.Summary = "Actualizar un personaje";
+                    opciones.Description = "Con este endpoint se puede actualizar un personaje";
+                    opciones.Parameters[0].Description = "El Id del personaje a actualizar";
+                    opciones.RequestBody.Description = "El personaje que se desea actualizar";
+                    return opciones;
+                });
 
             group.MapDelete("/{id:int}", Borrar)
-                .RequireAuthorization("esadmin");
+                .RequireAuthorization("esadmin")
+                .WithOpenApi(opciones =>
+                {
+                    opciones.Summary = "Borrar personaje";
+                    opciones.Description = "Con este endpoint se borra un personaje";
+
+                    return opciones;
+                }); 
 
             return group;
         }

@@ -54,7 +54,7 @@ builder.Services.AddSwaggerGen(c =>
         Description = "Este es un web api para trabajar con datos de tekken",
         Contact = new OpenApiContact
         {
-            Email = "luis_reyes@hotmail.com",
+            Email = "luis_reyes13@hotmail.com",
             Name = "Luis Reyes",
             Url = new Uri("https://reyes.blog")
         },

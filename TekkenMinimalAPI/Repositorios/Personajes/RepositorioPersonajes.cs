@@ -20,7 +20,10 @@ namespace TekkenMinimalAPI.Repositorios.Personajes
         {
             var queryable = context.Personajes.AsQueryable();
             await httpContext.InsertarParametrosPaginacionEnCabecera(queryable);
-            return await queryable.OrderBy(a => a.Nombre).Paginar(paginacionDTO).ToListAsync();
+
+            return await queryable
+                .OrderBy(a => a.Nombre)
+                .Paginar(paginacionDTO).ToListAsync();
         }
 
         public async Task<Personaje?> ObtenerPorId(int id)
@@ -49,7 +52,9 @@ namespace TekkenMinimalAPI.Repositorios.Personajes
 
         public async Task<List<int>> Existen(List<int> ids)
         {
-            return await context.Personajes.Where(p => ids.Contains(p.Id)).Select(p => p.Id).ToListAsync();
+            return await context.Personajes
+                .Where(p => ids.Contains(p.Id))
+                .Select(p => p.Id).ToListAsync();
         }
 
         public async Task Actualizar(Personaje personaje)
