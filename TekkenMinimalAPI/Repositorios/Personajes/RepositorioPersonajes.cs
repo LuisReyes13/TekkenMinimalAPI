@@ -45,9 +45,9 @@ namespace TekkenMinimalAPI.Repositorios.Personajes
             return personaje.Id;
         }
 
-        public async Task<bool> Existe(int id)
+        public async Task<bool> Existe(string nombre)
         {
-            return await context.Personajes.AnyAsync(p => p.Id == id);
+            return await context.Personajes.AnyAsync(p => p.Nombre == nombre);
         }
 
         public async Task<List<int>> Existen(List<int> ids)

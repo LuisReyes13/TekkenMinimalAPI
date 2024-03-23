@@ -8,7 +8,7 @@ namespace TekkenMinimalAPI.Repositorios.Personajes
         Task Actualizar(Personaje personaje);
         Task Borrar(int id);
         Task<int> Crear(Personaje personaje);
-        Task<bool> Existe(int id);
+        Task<bool> Existe(string nombre);
         Task<List<int>> Existen(List<int> ids);
         Task<Personaje?> ObtenerPorId(int id);
         Task<List<Personaje>> ObtenerPorNombre(string nombre);

@@ -7,6 +7,7 @@ using TekkenMinimalAPI.DTO_s;
 using TekkenMinimalAPI.DTO_s.Personajes;
 using TekkenMinimalAPI.Entidades;
 using TekkenMinimalAPI.Filtros;
+using TekkenMinimalAPI.Migrations;
 using TekkenMinimalAPI.Repositorios.Personajes;
 using TekkenMinimalAPI.Servicios;
 using TekkenMinimalAPI.Utilidades;
@@ -128,11 +129,18 @@ namespace TekkenMinimalAPI.EndPoints
             return TypedResults.Ok(personajeDTO);
         }
 
-        static async Task<Results<Created<PersonajeDTO>, ValidationProblem>> Crear([FromForm] CrearPersonajeDTO crearPersonajeDTO,
+        static async Task<Results<Created<PersonajeDTO>, ValidationProblem, Conflict<string>>> Crear([FromForm] CrearPersonajeDTO crearPersonajeDTO,
             IRepositorioPersonajes repositorio, IOutputCacheStore outputCacheStore, IMapper mapper,
             IAlmacenadorArchivos almacenadorArchivos)
         {
             var personaje = mapper.Map<Personaje>(crearPersonajeDTO);
+
+            var existeNombre = await repositorio.Existe(personaje.Nombre);
+
+            if (existeNombre)
+            {
+                return TypedResults.Conflict("Ya existe un registro con el mismo nombre");
+            }
 
             if (crearPersonajeDTO.Foto is not null)
             {
@@ -149,7 +157,7 @@ namespace TekkenMinimalAPI.EndPoints
             return TypedResults.Created($"/personajes/{id}", personajeDTO);
         }
 
-        static async Task<Results<NoContent, NotFound>> Actualizar(int id, [FromForm] CrearPersonajeDTO crearPersonajeDTO,
+        static async Task<Results<NoContent, NotFound, Conflict<string>>> Actualizar(int id, [FromForm] CrearPersonajeDTO crearPersonajeDTO,
             IRepositorioPersonajes repositorio, IAlmacenadorArchivos almacenadorArchivos, IOutputCacheStore outputCacheStore, IMapper mapper)
         {
             var personajeBD = await repositorio.ObtenerPorId(id);
@@ -157,6 +165,13 @@ namespace TekkenMinimalAPI.EndPoints
             if (personajeBD is null)
             {
                 return TypedResults.NotFound();
+            }
+
+            var existeNombre = await repositorio.Existe(personajeBD.Nombre);
+
+            if (existeNombre)
+            {
+                return TypedResults.Conflict("Ya existe un registro con el mismo nombre");
             }
 
             var personajeParaActualizar = mapper.Map<Personaje>(crearPersonajeDTO);
