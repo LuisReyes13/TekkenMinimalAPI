@@ -167,12 +167,12 @@ namespace TekkenMinimalAPI.EndPoints
                 return TypedResults.NotFound();
             }
 
-            var existeNombre = await repositorio.Existe(personajeBD.Nombre);
+            //var existeNombre = await repositorio.Existe(personajeBD.Nombre);
 
-            if (existeNombre)
-            {
-                return TypedResults.Conflict("Ya existe un registro con el mismo nombre");
-            }
+            //if (existeNombre)
+            //{
+            //    return TypedResults.Conflict("Ya existe un registro con el mismo nombre");
+            //}
 
             var personajeParaActualizar = mapper.Map<Personaje>(crearPersonajeDTO);
             personajeParaActualizar.Id = id;
